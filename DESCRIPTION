@@ -5,8 +5,15 @@ Authors@R: person("Brian", "Gulbis", email="brian.gulbis@gmail.com", role=c("aut
 Description: This package calculates different ICU morbidity and mortality risk
     scores, including APACHE II, APAPCHE III, and SAPS II. The presence of
     comorbidities is determined by using ICD-9-CM and ICD-10-CM codes.
-Depends: R (>= 2.10)
+Depends:
+    R (>= 2.10)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests:
+    testthat
+Imports:
+    dplyr,
+    magrittr,
+    tidyr
+RoxygenNote: 5.0.1
