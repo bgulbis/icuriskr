@@ -144,6 +144,16 @@ as.gcs <- function(x) {
     x
 }
 
+#' @rdname riskr_class
+#' @export
+as.hco3 <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.hco3(x)) return(x)
+    after <- match("hco3", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "hco3", after = after)
+    x
+}
+
 # class test functions ---------------------------------
 
 #' Test icuriskr-related classes
@@ -197,3 +207,7 @@ is.wbc <- function(x) inherits(x, "wbc")
 #' @rdname is.riskr
 #' @export
 is.gcs <- function(x) inherits(x, "gcs")
+
+#' @rdname is.riskr
+#' @export
+is.hco3 <- function(x) inherits(x, "hco3")
