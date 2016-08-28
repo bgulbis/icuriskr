@@ -138,7 +138,7 @@ aps_score.potassium <- function(x, ...) {
             y >= 7 | y < 2.5 ~ 4L,
             y >= 6 ~ 3L,
             y <= 2.9 ~ 2L,
-            y >= 5.5 | y <= 3.4 ~ 1L
+            y >= 5.5 | y <= 3.4 ~ 1L,
             is.numeric(y) ~ 0L
         )
     }
