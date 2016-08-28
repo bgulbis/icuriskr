@@ -81,3 +81,118 @@ aps_score.hr <- function(x, ...) {
 
     purrr::map_int(x, score)
 }
+
+#' @export
+#' @rdname aps_score
+aps_score.rr <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 50 | y <= 5 ~ 4L,
+            y >= 35 ~ 3L,
+            y <= 9 ~ 2L,
+            y >= 25 | y <= 11 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.ph <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 7.7 | y < 7.15 ~ 4L,
+            y >= 7.6 | y <= 7.24 ~ 3L,
+            y <= 7.32 ~ 2L,
+            y >= 7.5 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.sodium <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 180 | y <= 110 ~ 4L,
+            y >= 160 | y <= 119 ~ 3L,
+            y >= 155 | y <= 129 ~ 2L,
+            y >= 150 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.potassium <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 7 | y < 2.5 ~ 4L,
+            y >= 6 ~ 3L,
+            y <= 2.9 ~ 2L,
+            y >= 5.5 | y <= 3.4 ~ 1L
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.scr <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 3.5 ~ 4L,
+            y >= 2 ~ 3L,
+            y >= 1.5 | y < 0.6 ~ 2L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.hct <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 60 | y < 20 ~ 4L,
+            y >= 50 | y <= 29.9 ~ 2L,
+            y >= 46 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.wbc <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 40 | y < 1 ~ 4L,
+            y >= 20 | y <= 2.9 ~ 2L,
+            y >= 15 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @export
+#' @rdname aps_score
+aps_score.gcs <- function(x, ...) {
+    purrr::map_int(x, ~ 15 - .x)
+}
