@@ -154,6 +154,16 @@ as.hco3 <- function(x) {
     x
 }
 
+#' @rdname riskr_class
+#' @export
+as.pao2 <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.pao2(x)) return(x)
+    after <- match("pao2", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "pao2", after = after)
+    x
+}
+
 # class test functions ---------------------------------
 
 #' Test icuriskr-related classes
@@ -211,3 +221,7 @@ is.gcs <- function(x) inherits(x, "gcs")
 #' @rdname is.riskr
 #' @export
 is.hco3 <- function(x) inherits(x, "hco3")
+
+#' @rdname is.riskr
+#' @export
+is.pao2 <- function(x) inherits(x, "pao2")

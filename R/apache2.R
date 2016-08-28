@@ -213,6 +213,21 @@ aps_score.hco3 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
+#' @export
+#' @rdname aps_score
+aps_score.pao2 <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y < 55 ~ 4L,
+            y <= 60 ~ 3L,
+            y <= 70 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
 
 #' Calculate APACHE II Age Score
 #'
