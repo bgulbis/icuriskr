@@ -1,0 +1,34 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+## icuriskr
+
+The `icuriskr` package provides functions to calculate a variety of ICU
+morbidity and mortality risk scores. The scores currently included are:
+
+1. APAPCHE II
+1. APAPCHE III
+1. SAPS II
+
+## Installation
+
+The `icuriskr` package can be installed from GitHub using the `devtools` package
+and the following commands:
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+library(devtools)
+
+install_github("bgulbis\edwr")
+```
