@@ -35,15 +35,34 @@ as.riskr <- function(x) {
 #' @rdname riskr_class
 #' @export
 as.temp <- function(x) {
-    if (missing(x)) x <- character()
+    if (missing(x)) x <- numeric()
     if (is.temp(x)) return(x)
     # if (!is.riskr(x)) x <- as.riskr(x)
 
     after <- match("temp", class(x), nomatch = 0L)
-    class(df) <- append(class(x), "temp", after = after)
-    df
+    class(x) <- append(class(x), "temp", after = after)
+    x
 }
 
+#' @rdname riskr_class
+#' @export
+as.map <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.map(x)) return(x)
+    after <- match("map", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "map", after = after)
+    x
+}
+
+#' @rdname riskr_class
+#' @export
+as.hr <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.hr(x)) return(x)
+    after <- match("hr", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "hr", after = after)
+    x
+}
 
 # class test functions ---------------------------------
 
@@ -58,3 +77,11 @@ is.riskr <- function(x) inherits(x, "riskr")
 #' @rdname is.riskr
 #' @export
 is.temp <- function(x) inherits(x, "temp")
+
+#' @rdname is.riskr
+#' @export
+is.map <- function(x) inherits(x, "map")
+
+#' @rdname is.riskr
+#' @export
+is.hr <- function(x) inherits(x, "hr")
