@@ -196,3 +196,46 @@ aps_score.wbc <- function(x, ...) {
 aps_score.gcs <- function(x, ...) {
     purrr::map_int(x, ~ 15 - .x)
 }
+
+#' @export
+#' @rdname aps_score
+aps_score.hco3 <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 52 | y < 15 ~ 4L,
+            y >= 41 | y <= 17.9 ~ 3L,
+            y <= 21.9 ~ 2L,
+            y >= 32 ~ 1L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+
+#' Calculate APACHE II Age Score
+#'
+#' \code{age_score} calculates the age score for the APACHE II
+#'
+#' This function calculates the Age Score based on the APACHE II scoring system.
+#'
+#' @param x A numeric vector of ages
+#'
+#' @examples
+#'
+#' @export
+age_score <- function(x) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 75 ~ 6L,
+            y >= 65 ~ 5L,
+            y >= 55 ~ 3L,
+            y >= 45 ~ 2L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
