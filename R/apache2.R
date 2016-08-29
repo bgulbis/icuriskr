@@ -8,6 +8,11 @@
 #' @examples
 apache2 <- function() {
 
+    # use HCO3 points if missing ABG
+    # double SCr points if ARF
+    # Aa DO2 = (FIO2 * (Patm - PH2O) - (PaCO2 / 0.8)) - PaO2
+    # Patm = 760 - exp^(Elevation / -7000); Houston elevation = 43
+    # PH2O = 47 - exp^((Temp - 37) / 18.4)
 }
 
 #' Calculate APACHE II Acute Physiologic Score
