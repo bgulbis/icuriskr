@@ -2,12 +2,45 @@
 
 #' Calculate APACHE II score
 #'
+#' @param df A data frame
+#'
 #' @return A data frame
 #' @export
-apache2 <- function() {
-
+apache2 <- function(df) {
+    # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
     # use HCO3 points if missing ABG
     # double SCr points if ARF
+    df <- dplyr::mutate_(.dots = purrr::set_names(
+        x = list(~as.temp(temp),
+                 ~as.map(map),
+                 ~as.hr(hr),
+                 ~as.rr(rr),
+                 ~as.aa_grad(aa_gradient(pco2, pao2, fio2, temp, 13.106)),
+                 ~as.pao2(pao2),
+                 ~as.ph(ph),
+                 ~as.hco3(hco3),
+                 ~as.sodium(sodium),
+                 ~as.potassium(potassium),
+                 ~as.scr(scr),
+                 ~as.hct(hct),
+                 ~as.wbc(wbc),
+                 ~as.gcs(gcs)),
+        nm = list(temp,
+                  map,
+                  hr,
+                  rr,
+                  aa_grad,
+                  pao2,
+                  ph,
+                  hco3,
+                  sodium,
+                  potassium,
+                  scr,
+                  hct,
+                  wbc,
+                  gcs)
+    ))
+
 }
 
 #' Calculate APACHE II Acute Physiologic Score

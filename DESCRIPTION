@@ -1,6 +1,6 @@
 Package: icuriskr
 Title: Calculate ICU Morbidity and Mortality Risk Scores
-Version: 0.0.0.9002
+Version: 0.0.0.9003
 Authors@R: person("Brian", "Gulbis", email="brian.gulbis@gmail.com", role=c("aut","cre"))
 Description: This package calculates different ICU morbidity and mortality risk
     scores, including APACHE II, APAPCHE III, and SAPS II. The presence of
