@@ -10,7 +10,7 @@ apache2 <- function(df) {
     # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
     # use HCO3 points if missing ABG
     # double SCr points if ARF
-    df <- dplyr::mutate_(.dots = purrr::set_names(
+    dplyr::mutate_(.dots = purrr::set_names(
         x = list(~as.temp(temp),
                  ~as.map(map),
                  ~as.hr(hr),
@@ -39,7 +39,8 @@ apache2 <- function(df) {
                   hct,
                   wbc,
                   gcs)
-    ))
+    )) %>%
+        purrr::dmap_if(is.aps, aps_score)
 
 }
 
