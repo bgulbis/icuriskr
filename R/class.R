@@ -164,6 +164,16 @@ as.pao2 <- function(x) {
     x
 }
 
+#' @rdname riskr_class
+#' @keywords internal
+as.aa_grad <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.aa_grad(x)) return(x)
+    after <- match("aa_grad", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "aa_grad", after = after)
+    x
+}
+
 # class test functions ---------------------------------
 
 #' Test icuriskr-related classes
@@ -225,3 +235,7 @@ is.hco3 <- function(x) inherits(x, "hco3")
 #' @rdname is.riskr
 #' @keywords internal
 is.pao2 <- function(x) inherits(x, "pao2")
+
+#' @rdname is.riskr
+#' @keywords internal
+is.aa_grad <- function(x) inherits(x, "aa_grad")

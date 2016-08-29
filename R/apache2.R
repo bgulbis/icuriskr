@@ -228,6 +228,21 @@ aps_score.pao2 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
+#' @keywords internal
+#' @rdname aps_score
+aps_score.aa_grad <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 500 ~ 4L,
+            y >= 350 ~ 3L,
+            y >= 200 ~ 2L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
 
 #' Calculate APACHE II Age Score
 #'
