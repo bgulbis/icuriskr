@@ -29,19 +29,19 @@ apache2 <- function() {
 #'
 #' @examples
 #'
-#' @export
+#' @keywords internal
 aps_score <- function(x, ...) {
     UseMethod("aps_score")
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.default <- function(x, ...) {
     warning("No method available for objects of this class")
     x
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.temp <- function(x, ...) {
     score <- function(y) {
@@ -57,7 +57,7 @@ aps_score.temp <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.map <- function(x, ...) {
     score <- function(y) {
@@ -72,7 +72,7 @@ aps_score.map <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.hr <- function(x, ...) {
     score <- function(y) {
@@ -87,7 +87,7 @@ aps_score.hr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.rr <- function(x, ...) {
     score <- function(y) {
@@ -103,7 +103,7 @@ aps_score.rr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.ph <- function(x, ...) {
     score <- function(y) {
@@ -119,7 +119,7 @@ aps_score.ph <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.sodium <- function(x, ...) {
     score <- function(y) {
@@ -135,7 +135,7 @@ aps_score.sodium <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.potassium <- function(x, ...) {
     score <- function(y) {
@@ -151,7 +151,7 @@ aps_score.potassium <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.scr <- function(x, ...) {
     score <- function(y) {
@@ -166,7 +166,7 @@ aps_score.scr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.hct <- function(x, ...) {
     score <- function(y) {
@@ -181,7 +181,7 @@ aps_score.hct <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.wbc <- function(x, ...) {
     score <- function(y) {
@@ -196,13 +196,13 @@ aps_score.wbc <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.gcs <- function(x, ...) {
     purrr::map_int(x, ~ 15 - .x)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.hco3 <- function(x, ...) {
     score <- function(y) {
@@ -218,7 +218,7 @@ aps_score.hco3 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @export
+#' @keywords internal
 #' @rdname aps_score
 aps_score.pao2 <- function(x, ...) {
     score <- function(y) {
@@ -244,7 +244,7 @@ aps_score.pao2 <- function(x, ...) {
 #'
 #' @examples
 #'
-#' @export
+#' @keywords internal
 age_score <- function(x) {
     score <- function(y) {
         dplyr::case_when(

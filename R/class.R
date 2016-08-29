@@ -23,7 +23,7 @@ riskr <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.riskr <- function(x) {
     if (missing(x)) x <- character()
     if (is.riskr(x)) return(x)
@@ -33,7 +33,7 @@ as.riskr <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.temp <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.temp(x)) return(x)
@@ -45,7 +45,7 @@ as.temp <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.map <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.map(x)) return(x)
@@ -55,7 +55,7 @@ as.map <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.hr <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.hr(x)) return(x)
@@ -65,7 +65,7 @@ as.hr <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.rr <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.rr(x)) return(x)
@@ -75,7 +75,7 @@ as.rr <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.ph <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.ph(x)) return(x)
@@ -95,7 +95,7 @@ as.sodium <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.potassium <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.potassium(x)) return(x)
@@ -105,7 +105,7 @@ as.potassium <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.scr <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.scr(x)) return(x)
@@ -115,7 +115,7 @@ as.scr <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.hct <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.hct(x)) return(x)
@@ -125,7 +125,7 @@ as.hct <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.wbc <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.wbc(x)) return(x)
@@ -135,7 +135,7 @@ as.wbc <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.gcs <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.gcs(x)) return(x)
@@ -145,7 +145,7 @@ as.gcs <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.hco3 <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.hco3(x)) return(x)
@@ -155,7 +155,7 @@ as.hco3 <- function(x) {
 }
 
 #' @rdname riskr_class
-#' @export
+#' @keywords internal
 as.pao2 <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.pao2(x)) return(x)
@@ -175,53 +175,53 @@ as.pao2 <- function(x) {
 is.riskr <- function(x) inherits(x, "riskr")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.temp <- function(x) inherits(x, "temp")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.map <- function(x) inherits(x, "map")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.hr <- function(x) inherits(x, "hr")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.rr <- function(x) inherits(x, "rr")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.ph <- function(x) inherits(x, "ph")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.sodium <- function(x) inherits(x, "sodium")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.potassium <- function(x) inherits(x, "potassium")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.scr <- function(x) inherits(x, "scr")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.hct <- function(x) inherits(x, "hct")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.wbc <- function(x) inherits(x, "wbc")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.gcs <- function(x) inherits(x, "gcs")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.hco3 <- function(x) inherits(x, "hco3")
 
 #' @rdname is.riskr
-#' @export
+#' @keywords internal
 is.pao2 <- function(x) inherits(x, "pao2")
