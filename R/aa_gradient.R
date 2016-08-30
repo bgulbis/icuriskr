@@ -33,9 +33,7 @@ aa_gradient <- function(pco2, pao2, fio2 = 21, temp = 37, elev = 0) {
     patm <- 760 * exp(elev / -7000)
     ph2o <- 47 * exp((temp - 37) / 18.4)
 
-    if (fio2 > 1) {
-        fio2 <- fio2 / 100
-    }
+    fio2 <- purrr::map_dbl(fio2, ~ dplyr::if_else(.x > 1, .x / 100, .x))
 
     (fio2 * (patm - ph2o) - (pco2 / 0.8)) - pao2
 }
