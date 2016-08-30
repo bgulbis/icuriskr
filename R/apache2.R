@@ -12,11 +12,11 @@ apache2 <- function(df) {
     # double SCr points if ARF
 
     dplyr::mutate_(df, .dots = purrr::set_names(
-        x = list(~as.temp(temp),
+        x = list(~as.temp(F_to_C(temp)),
                  ~as.map(map),
                  ~as.hr(hr),
                  ~as.rr(rr),
-                 ~as.aa_grad(aa_gradient(pco2, pao2, fio2, temp, 13.106)),
+                 ~as.aa_grad(aa_gradient(pco2, pao2, fio2, F_to_C(temp), 13.106)),
                  ~as.pao2(pao2),
                  ~as.ph(ph),
                  ~as.hco3(hco3),
