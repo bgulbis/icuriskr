@@ -7,11 +7,9 @@
 #' @return A data frame
 #' @export
 apache2 <- function(df) {
-    # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
-    # use HCO3 points if missing ABG
     # double SCr points if ARF
 
-    dplyr::mutate_(df, .dots = purrr::set_names(
+    aps <- dplyr::mutate_(df, .dots = purrr::set_names(
         x = list(~as.temp(F_to_C(temp)),
                  ~as.map(map),
                  ~as.hr(hr),
@@ -24,8 +22,8 @@ apache2 <- function(df) {
                  ~as.potassium(potassium),
                  ~as.scr(scr),
                  ~as.hct(hct),
-                 ~as.wbc(wbc)
-                 # ~as.gcs(gcs)
+                 ~as.wbc(wbc),
+                 ~as.gcs(gcs)
         ),
         nm = list("temp",
                   "map",
@@ -39,12 +37,26 @@ apache2 <- function(df) {
                   "potassium",
                   "scr",
                   "hct",
-                  "wbc"
-                  # "gcs"
+                  "wbc",
+                  "gcs"
         )
     )) %>%
-        purrr::dmap_if(is.aps, aps_score)
+        dplyr::ungroup() %>%
+        purrr::dmap_if(is.aps, aps_score) %>%
+        # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
+        # use HCO3 points if missing ABG
+        dplyr::mutate_(.dots = purrr::set_names(
+            x = list(
+                ~dplyr::if_else(fio2 >= 0.5, aa_grad, pao2, pao2),
+                ~dplyr::coalesce(ph, hco3)
+            ),
+            nm = list("pulm", "ph")
+        )) %>%
+        dplyr::select_(quote(-hco3), quote(-aa_grad), quote(-pao2)) %>%
+        dplyr::select_if(is.integer) %>%
+        purrr::by_row(sum, na.rm = TRUE)
 
+    aps
 }
 
 #' Calculate APACHE II Acute Physiologic Score
@@ -231,7 +243,7 @@ aps_score.wbc <- function(x, ...) {
 #' @keywords internal
 #' @rdname aps_score
 aps_score.gcs <- function(x, ...) {
-    purrr::map_int(x, ~ 15 - .x)
+    purrr::map_int(x, ~ 15L - as.integer(.x))
 }
 
 #' @keywords internal
