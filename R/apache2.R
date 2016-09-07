@@ -41,6 +41,7 @@ apache2 <- function(df) {
     )) %>%
         dplyr::ungroup() %>%
         purrr::dmap_if(is.aps, aps_score) %>%
+        purrr::dmap_at("age", age_score) %>%
         # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
         # use HCO3 points if missing ABG
         # double SCr points if ARF
@@ -52,20 +53,15 @@ apache2 <- function(df) {
             ),
             nm = list("pulm", "ph", "scr")
         )) %>%
-        dplyr::select_(quote(-age),
-                       quote(-hco3),
+        dplyr::select_(quote(-hco3),
                        quote(-aa_grad),
                        quote(-pao2)) %>%
-        dplyr::select_if(is.integer) %>%
-        purrr::by_row(sum, na.rm = TRUE, .collate = "rows", .to = "aps") %>%
-        tibble::add_column(age = age_score(df$age)) %>%
-        dplyr::mutate_(.dots = purrr::set_names(
-            x = list(~aps + age),
-            nm = "apache2"
-        )) %>%
-        tibble::add_column(pie.id = df$pie.id, .before = 1) %>%
+        dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
-        dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE)))
+        dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
+        purrr::by_row(function(x) sum(x[, -1], na.rm = TRUE),
+                      .collate = "rows",
+                      .to = "apache2")
 
     score
 }
