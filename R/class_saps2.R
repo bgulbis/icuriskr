@@ -153,6 +153,17 @@ as.bili <- function(x) {
     x
 }
 
+#' @rdname saps
+#' @keywords internal
+as.uop <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.uop(x)) return(x)
+    if (!is.saps(x)) x <- as.saps(x)
+    after <- match("uop", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "uop", after = after)
+    x
+}
+
 # class test functions ---------------------------------
 
 #' Test icuriskr-related classes
@@ -206,3 +217,7 @@ is.pao2 <- function(x) inherits(x, "pao2")
 #' @rdname is.saps
 #' @keywords internal
 is.bili <- function(x) inherits(x, "bili")
+
+#' @rdname is.saps
+#' @keywords internal
+is.uop <- function(x) inherits(x, "uop")
