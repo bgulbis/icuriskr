@@ -38,9 +38,10 @@ saps2 <- function(df) {
         dplyr::ungroup() %>%
         purrr::dmap_if(is.saps, saps_score) %>%
         purrr::dmap_at("age", age_score) %>%
+        purrr::dmap_at("admit_type", admit_score) %>%
         # if ventilated, calculate PaO2/FiO2 ratio
         dplyr::mutate_(.dots = purrr::set_names(
-            x = list(~dplyr::if_else(vent == TRUE, pao2 / fio2, NA_integer_)),
+            x = list(~dplyr::if_else(vent == TRUE, pao2 / (fio2 / 100), NA_real_, NA_real_)),
             nm = "pao2"
         )) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
@@ -271,6 +272,29 @@ age_score <- function(x) {
             y >= 60 ~ 12L,
             y >= 40 ~ 7L,
             is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' Calculate SAPS II Admit Type Score
+#'
+#' \code{admit_score} calculates the admit type score for the SAPS II
+#'
+#' This function calculates the Admit Type Score based on the SAPS II scoring system.
+#'
+#' @param x A character vector of admit types
+#'
+#' @examples
+#'
+#' @keywords internal
+admit_score <- function(x) {
+    score <- function(y) {
+        dplyr::case_when(
+            y == "nonoperative" ~ 6L,
+            y == "emergency" ~ 8L,
+            is.character(y) ~ 0L
         )
     }
 
