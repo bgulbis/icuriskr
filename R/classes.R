@@ -276,6 +276,26 @@ as.uop <- function(x) {
     x
 }
 
+#' @rdname phyisol
+#' @keywords internal
+as.age <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.age(x)) return(x)
+    after <- match("age", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "age", after = after)
+    x
+}
+
+#' @rdname phyisol
+#' @keywords internal
+as.admit <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.admit(x)) return(x)
+    after <- match("admit", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "admit", after = after)
+    x
+}
+
 # class test functions ---------------------------------
 
 #' Test icuriskr-related classes

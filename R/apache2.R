@@ -40,7 +40,7 @@ apache2 <- function(df) {
         )
     )) %>%
         dplyr::ungroup() %>%
-        purrr::dmap_if(is.aps, aps_score) %>%
+        purrr::dmap_if(is.aps, aps2_score) %>%
         purrr::dmap_at("age", age_score) %>%
         # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
         # use HCO3 points if missing ABG
@@ -68,7 +68,7 @@ apache2 <- function(df) {
 
 #' Calculate APACHE II Acute Physiologic Score
 #'
-#' \code{aps_score} calculates the APS score for an APACHE II variable
+#' \code{aps2_score} calculates the APS score for an APACHE II variable
 #'
 #' This is an S3 generic function for calculating the Acute Physicologic Score
 #' (APS) for a variable based on the APACHE II scoring system.The function
@@ -81,20 +81,20 @@ apache2 <- function(df) {
 #' @examples
 #'
 #' @keywords internal
-aps_score <- function(x, ...) {
-    UseMethod("aps_score")
+aps2_score <- function(x, ...) {
+    UseMethod("aps2_score")
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.default <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.default <- function(x, ...) {
     warning("No method available for objects of this class")
     x
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.temp <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.temp <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 41 | y <= 29.9 ~ 4L,
@@ -109,8 +109,8 @@ aps_score.temp <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.map <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.map <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 160 | y <= 49 ~ 4L,
@@ -124,8 +124,8 @@ aps_score.map <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.hr <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.hr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 180 | y <= 39 ~ 4L,
@@ -139,8 +139,8 @@ aps_score.hr <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.rr <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.rr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 50 | y <= 5 ~ 4L,
@@ -155,8 +155,8 @@ aps_score.rr <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.ph <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.ph <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 7.7 | y < 7.15 ~ 4L,
@@ -171,8 +171,8 @@ aps_score.ph <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.sodium <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.sodium <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 180 | y <= 110 ~ 4L,
@@ -187,8 +187,8 @@ aps_score.sodium <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.potassium <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.potassium <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 7 | y < 2.5 ~ 4L,
@@ -203,8 +203,8 @@ aps_score.potassium <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.scr <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.scr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 3.5 ~ 4L,
@@ -218,8 +218,8 @@ aps_score.scr <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.hct <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.hct <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 60 | y < 20 ~ 4L,
@@ -233,8 +233,8 @@ aps_score.hct <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.wbc <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.wbc <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 40 | y < 1 ~ 4L,
@@ -248,14 +248,14 @@ aps_score.wbc <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.gcs <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.gcs <- function(x, ...) {
     purrr::map_int(x, ~ 15L - as.integer(.x))
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.hco3 <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.hco3 <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 52 | y < 15 ~ 4L,
@@ -270,8 +270,8 @@ aps_score.hco3 <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.pao2 <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.pao2 <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y < 55 ~ 4L,
@@ -285,8 +285,8 @@ aps_score.pao2 <- function(x, ...) {
 }
 
 #' @keywords internal
-#' @rdname aps_score
-aps_score.aa_grad <- function(x, ...) {
+#' @rdname aps2_score
+aps2_score.aa_grad <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 500 ~ 4L,
@@ -299,19 +299,9 @@ aps_score.aa_grad <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-
-#' Calculate APACHE II Age Score
-#'
-#' \code{age_score} calculates the age score for the APACHE II
-#'
-#' This function calculates the Age Score based on the APACHE II scoring system.
-#'
-#' @param x A numeric vector of ages
-#'
-#' @examples
-#'
 #' @keywords internal
-age_score <- function(x) {
+#' @rdname aps2_score
+aps2_score.age <- function(x) {
     score <- function(y) {
         dplyr::case_when(
             y >= 75 ~ 6L,

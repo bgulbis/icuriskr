@@ -1,4 +1,4 @@
-# Ssaps II
+# SAPS II
 
 #' Calculate Ssaps II score
 #'
@@ -252,18 +252,9 @@ saps_score.uop <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' Calculate SAPS II Age Score
-#'
-#' \code{age_score} calculates the age score for the SAPS II
-#'
-#' This function calculates the Age Score based on the SAPS II scoring system.
-#'
-#' @param x A numeric vector of ages
-#'
-#' @examples
-#'
 #' @keywords internal
-age_score <- function(x) {
+#' @rdname saps_score
+saps_score.age <- function(x) {
     score <- function(y) {
         dplyr::case_when(
             y >= 80 ~ 18L,
@@ -278,18 +269,9 @@ age_score <- function(x) {
     purrr::map_int(x, score)
 }
 
-#' Calculate SAPS II Admit Type Score
-#'
-#' \code{admit_score} calculates the admit type score for the SAPS II
-#'
-#' This function calculates the Admit Type Score based on the SAPS II scoring system.
-#'
-#' @param x A character vector of admit types
-#'
-#' @examples
-#'
 #' @keywords internal
-admit_score <- function(x) {
+#' @rdname saps_score
+saps_score.admit <- function(x) {
     score <- function(y) {
         dplyr::case_when(
             y == "nonoperative" ~ 6L,
