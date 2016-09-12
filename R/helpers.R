@@ -12,5 +12,5 @@
 #' @return A data frame
 #' @keywords internal
 set_types <- function(df, types) {
-    purrr::map_df(types, ~ purrr::dmap_at(df, .at = c("hr", "sbp"), .f = .x))
+    purrr::map_df(types, ~ purrr::dmap_at(df, .at = names(.x), .f = .x))
 }
