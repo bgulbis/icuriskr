@@ -401,3 +401,12 @@ is.bili <- function(x) inherits(x, "bili")
 #' @rdname is.physiol
 #' @keywords internal
 is.uop <- function(x) inherits(x, "uop")
+
+#' @rdname is.physiol
+#' @keywords internal
+is.age <- function(x) inherits(x, "age")
+
+#' @rdname is.physiol
+#' @keywords internal
+is.admit <- function(x) inherits(x, "admit")
+
