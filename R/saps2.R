@@ -7,51 +7,36 @@
 #' @return A data frame
 #' @export
 saps2 <- function(df) {
-    score <- dplyr::mutate_(df, .dots = purrr::set_names(
-        x = list(~as.temp(F_to_C(temp)),
-                 ~as.sbp(sbp),
-                 ~as.hr(hr),
-                 ~as.pao2(pao2),
-                 ~as.hco3(hco3),
-                 ~as.sodium(sodium),
-                 ~as.potassium(potassium),
-                 ~as.bun(bun),
-                 ~as.bili(bili),
-                 ~as.wbc(wbc),
-                 ~as.gcs(gcs),
-                 ~as.uop(uop)
-        ),
-        nm = list("temp",
-                  "sbp",
-                  "hr",
-                  "pao2",
-                  "hco3",
-                  "sodium",
-                  "potassium",
-                  "bun",
-                  "bili",
-                  "wbc",
-                  "gcs",
-                  "uop"
-        )
-    )) %>%
-        dplyr::ungroup() %>%
-        purrr::dmap_if(is.saps, saps_score) %>%
-        purrr::dmap_at("age", age_score) %>%
-        purrr::dmap_at("admit_type", admit_score) %>%
+    params <- c("temp", "sbp", "hr", "pao2", "hco3", "sodium", "potassium",
+                "bun", "bili", "wbc", "gcs", "uop", "age", "admit_type")
+
+    purrr::unslice(df) %>%
         # if ventilated, calculate PaO2/FiO2 ratio
-        dplyr::mutate_(.dots = purrr::set_names(
-            x = list(~dplyr::if_else(vent == TRUE, pao2 / (fio2 / 100), NA_real_, NA_real_)),
-            nm = "pao2"
-        )) %>%
+        dplyr::mutate_at("pao2", dplyr::funs(
+            pao2 = dplyr::if_else(vent == TRUE, pao2 / (fio2 / 100),
+                                  NA_real_, NA_real_))) %>%
+        purrr::dmap_at(params, as.saps) %>%
+        purrr::dmap_at("temp", ~as.temp(F_to_C(.x))) %>%
+        purrr::dmap_at("sbp", as.sbp) %>%
+        purrr::dmap_at("hr", as.hr) %>%
+        purrr::dmap_at("pao2", as.pao2) %>%
+        purrr::dmap_at("hco3", as.hco3) %>%
+        purrr::dmap_at("sodium", as.sodium) %>%
+        purrr::dmap_at("potassium", as.potassium) %>%
+        purrr::dmap_at("bun", as.bun) %>%
+        purrr::dmap_at("bili", as.bili) %>%
+        purrr::dmap_at("wbc", as.wbc) %>%
+        purrr::dmap_at("gcs", as.gcs) %>%
+        purrr::dmap_at("uop", as.uop) %>%
+        purrr::dmap_at("age", as.age) %>%
+        purrr::dmap_at("admit_type", as.admit) %>%
+        purrr::dmap_if(is.saps, saps_score) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
         dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
         purrr::by_row(function(x) sum(x[, -1], na.rm = TRUE),
                       .collate = "rows",
                       .to = "saps2")
-
-    score
 }
 
 #' Calculate SAPS II Score
