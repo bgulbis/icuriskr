@@ -9,6 +9,10 @@
 apache3 <- function(df) {
     params <- c("hr", "map", "temp", "rr", "pao2")
 
+    # ARF: SCr >= 1.5 + UOP < 410 and no chronic HD
+    # If on vent, no RR points for 6-12
+    # If on vent and FiO2 >= 0.5, us Aa-gradient; else use PaO2
+
     purrr::unslice(df) %>%
         # if ventilated, calculate PaO2/FiO2 ratio
         dplyr::mutate_at("pao2", dplyr::funs(
@@ -138,18 +142,27 @@ aps3_score.rr <- function(x, ...) {
 
 #' @keywords internal
 #' @rdname aps3_score
-aps3_score.ph <- function(x, ...) {
-    score <- function(y) {
+aps3_score.ph <- function(x, ..., pco2) {
+    score <- function(y, z) {
         dplyr::case_when(
-            y >= 7.7 | y < 7.15 ~ 4L,
-            y >= 7.6 | y <= 7.24 ~ 3L,
-            y <= 7.32 ~ 2L,
-            y >= 7.5 ~ 1L,
+            y < 7.20 & z < 50 ~ 12L,
+            y < 7.20 ~ 4L,
+            y < 7.30 & z >= 30 & z < 35 ~ 6L,
+            y < 7.30 & z >= 35 & z < 50 ~ 3L,
+            y < 7.30 & z >= 50 ~ 2L,
+            y < 7.35 & z < 30 ~ 9L,
+            y < 7.45 & z >= 45 ~ 1L,
+            y < 7.50 & z < 30 ~ 5L,
+            y >= 7.45 & y < 7.50 & z >= 35 & z < 45 ~ 2L,
+            y >= 7.45 & z >= 45 ~ 12L,
+            y >= 7.50 & z >= 35 ~ 12L,
+            y >= 7.50 & z >= 25 ~ 3L,
+            y >= 7.50 & y < 7.65 & z < 25 ~ 3L,
             is.numeric(y) ~ 0L
         )
     }
 
-    purrr::map_int(x, score)
+    purrr::map2_int(x, pco2, score)
 }
 
 #' @keywords internal
@@ -169,9 +182,9 @@ aps3_score.sodium <- function(x, ...) {
 
 #' @keywords internal
 #' @rdname aps3_score
-aps3_score.scr <- function(x, ..., arf = FALSE) {
-    score <- function(y) {
-        if (arf == TRUE) {
+aps3_score.scr <- function(x, ..., arf) {
+    score <- function(y, z) {
+        if (z == TRUE) {
             dplyr::case_when(
                 y >= 1.5 ~ 10L,
                 is.numeric(y) ~ 0L
@@ -186,7 +199,7 @@ aps3_score.scr <- function(x, ..., arf = FALSE) {
         }
     }
 
-    purrr::map_int(x, score)
+    purrr::map2_int(x, arf, score)
 }
 
 #' @keywords internal
@@ -253,19 +266,44 @@ aps3_score.wbc <- function(x, ...) {
 
 #' @keywords internal
 #' @rdname aps3_score
-aps3_score.gcs <- function(x, ...) {
-    purrr::map_int(x, ~ 15L - as.integer(.x))
+aps3_score.bili <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y >= 8 ~ 16L,
+            y >= 5 ~ 8L,
+            y >= 3 ~ 6L,
+            y >= 2 ~ 5L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
 }
 
 #' @keywords internal
 #' @rdname aps3_score
-aps3_score.hco3 <- function(x, ...) {
+aps3_score.albumin <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
-            y >= 52 | y < 15 ~ 4L,
-            y >= 41 | y <= 17.9 ~ 3L,
-            y <= 21.9 ~ 2L,
-            y >= 32 ~ 1L,
+            y <= 1.9 ~ 11L,
+            y <= 2.4 ~ 6L,
+            y >= 4.5 ~ 4L,
+            is.numeric(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}
+
+#' @keywords internal
+#' @rdname aps3_score
+aps3_score.glucose <- function(x, ...) {
+    score <- function(y) {
+        dplyr::case_when(
+            y <= 39 ~ 8L,
+            y <= 59 ~ 9L,
+            y >= 350 ~ 5L,
+            y >= 200 ~ 3L,
             is.numeric(y) ~ 0L
         )
     }
@@ -309,10 +347,12 @@ aps3_score.aa_grad <- function(x, ...) {
 aps3_score.age <- function(x) {
     score <- function(y) {
         dplyr::case_when(
-            y >= 75 ~ 6L,
-            y >= 65 ~ 5L,
-            y >= 55 ~ 3L,
-            y >= 45 ~ 2L,
+            y >= 85 ~ 24L,
+            y >= 75 ~ 17L,
+            y >= 70 ~ 16L,
+            y >= 65 ~ 13L,
+            y >= 60 ~ 11L,
+            y >= 45 ~ 5L,
             is.numeric(y) ~ 0L
         )
     }
@@ -320,3 +360,81 @@ aps3_score.age <- function(x) {
     purrr::map_int(x, score)
 }
 
+#' Calculate neurologic abnormality score for APACHE III
+#'
+#' Calculate neurologic abnormality score for APACHE III
+#'
+#' @param eye A numeric vector
+#' @param motor A numeric vector
+#' @param verbal A numeric vector
+#'
+#' @return An integer vector
+#' @export
+apache3_neuro <- function(eye, motor, verbal) {
+    score <- function(eye, motor, verbal) {
+        if (is.na(eye) | is.na(motor) | is.na(verbal)) {
+            return(0L)
+        }
+
+        if (eye == 1) {
+            if (motor >= 5) {
+                dplyr::case_when(
+                    verbal == 1 ~ 16L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else if (motor >=2 & motor <= 4) {
+                dplyr::case_when(
+                    verbal == 1 ~ 33L,
+                    verbal <= 4 ~ 24L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else if (motor == 1) {
+                dplyr::case_when(
+                    verbal == 1 ~ 48L,
+                    verbal <= 4 ~ 29L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else {
+                0L
+            }
+        } else if (eye > 1) {
+            if (motor == 6) {
+                dplyr::case_when(
+                    verbal == 1 ~ 15L,
+                    verbal <= 3 ~ 10L,
+                    verbal == 4 ~ 3L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else if (motor == 5) {
+                dplyr::case_when(
+                    verbal == 1 ~ 15L,
+                    verbal <= 3 ~ 13L,
+                    verbal == 4 ~ 8L,
+                    verbal == 5 ~ 3L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else if (motor >= 2 & motor <= 4) {
+                dplyr::case_when(
+                    verbal < 4 ~ 24L,
+                    verbal == 4 ~ 13L,
+                    verbal == 5 ~ 3L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else if (motor == 1) {
+                dplyr::case_when(
+                    verbal < 4 ~ 29L,
+                    verbal == 4 ~ 13L,
+                    verbal == 5 ~ 3L,
+                    is.numeric(verbal) ~ 0L
+                )
+            } else {
+                0L
+            }
+        } else {
+            0L
+        }
+    }
+
+    vals <- list(eye = eye, motor = motor, verbal = verbal)
+    purrr::pmap_int(vals, score)
+}
