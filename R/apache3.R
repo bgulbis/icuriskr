@@ -7,7 +7,9 @@
 #' @return A data frame
 #' @export
 apache3 <- function(df) {
-    params <- c("hr", "map", "temp", "rr", "pao2")
+    params <- c("hr", "map", "temp", "rr", "pao2", "aa_grad", "hct", "wbc",
+                "scr", "uop", "bun", "sodium", "albumin", "bili", "glucose",
+                "age")
 
     # ARF: SCr >= 1.5 + UOP < 410 and no chronic HD
     # If on vent, no RR points for 6-12
@@ -19,21 +21,33 @@ apache3 <- function(df) {
             pao2 = dplyr::if_else(vent == TRUE, pao2 / (fio2 / 100),
                                   NA_real_, NA_real_))) %>%
         purrr::dmap_at(params, as.aps3) %>%
+        dplyr::mutate_(.dots = purrr::set_names(
+            x = list(~dplyr::if_else(vent == TRUE & rr >=6 & rr <= 12, 18, rr, rr)),
+            nm = list("rr")
+        )) %>%
         purrr::dmap_at("hr", as.hr) %>%
         purrr::dmap_at("map", as.map) %>%
         purrr::dmap_at("temp", ~as.temp(F_to_C(.x))) %>%
+        purrr::dmap_at("rr", as.rr) %>%
         purrr::dmap_at("pao2", as.pao2) %>%
-        purrr::dmap_at("hco3", as.hco3) %>%
-        purrr::dmap_at("sodium", as.sodium) %>%
-        purrr::dmap_at("potassium", as.potassium) %>%
-        purrr::dmap_at("bun", as.bun) %>%
-        purrr::dmap_at("bili", as.bili) %>%
+        purrr::dmap_at("aa_grad", as.aa_grad) %>%
+        purrr::dmap_at("hct", as.hct) %>%
         purrr::dmap_at("wbc", as.wbc) %>%
-        purrr::dmap_at("gcs", as.gcs) %>%
         purrr::dmap_at("uop", as.uop) %>%
+        purrr::dmap_at("bun", as.bun) %>%
+        purrr::dmap_at("sodium", as.sodium) %>%
+        purrr::dmap_at("albumin", as.albumin) %>%
+        purrr::dmap_at("bili", as.bili) %>%
+        purrr::dmap_at("glucose", as.glucose) %>%
         purrr::dmap_at("age", as.age) %>%
-        purrr::dmap_at("admit_type", as.admit) %>%
-        purrr::dmap_if(is.saps, saps_score) %>%
+        purrr::dmap_if(is.aps3, aps3_score) %>%
+        purrr::dmap_at("scr", ~ aps3_score(as.scr(.x), arf = df$arf)) %>%
+        purrr::dmap_at("ph", ~ aps3_score(as.ph(.x), pco2 = df$pco2)) %>%
+        # dplyr::mutate_(.dots = purrr::set_names(
+        #     x = list(~aps3_score(as.scr(scr), arf = arf),
+        #              ~aps3_score(as.ph(ph), pco2 = pco2)),
+        #     nm = list("scr", "ph")
+        # )) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
         dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
