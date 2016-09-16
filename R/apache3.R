@@ -48,6 +48,12 @@ apache3 <- function(df) {
         #              ~aps3_score(as.ph(ph), pco2 = pco2)),
         #     nm = list("scr", "ph")
         # )) %>%
+        dplyr::mutate_(.dots = purrr::set_names(
+            x = list(~dplyr::if_else(fio2 >= 0.5 & vent == TRUE, aa_grad, pao2, pao2)),
+            nm = list("pulm")
+        )) %>%
+        dplyr::select_(quote(-aa_grad),
+                       quote(-pao2)) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
         dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
