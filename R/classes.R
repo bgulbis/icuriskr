@@ -268,6 +268,26 @@ as.bili <- function(x) {
 
 #' @rdname phyisol
 #' @keywords internal
+as.albumin <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.albumin(x)) return(x)
+    after <- match("albumin", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "albumin", after = after)
+    x
+}
+
+#' @rdname phyisol
+#' @keywords internal
+as.glucose <- function(x) {
+    if (missing(x)) x <- numeric()
+    if (is.glucose(x)) return(x)
+    after <- match("glucose", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "glucose", after = after)
+    x
+}
+
+#' @rdname phyisol
+#' @keywords internal
 as.uop <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.uop(x)) return(x)
@@ -397,6 +417,14 @@ is.aa_grad <- function(x) inherits(x, "aa_grad")
 #' @rdname is.physiol
 #' @keywords internal
 is.bili <- function(x) inherits(x, "bili")
+
+#' @rdname is.physiol
+#' @keywords internal
+is.albumin <- function(x) inherits(x, "albumin")
+
+#' @rdname is.physiol
+#' @keywords internal
+is.glucose <- function(x) inherits(x, "glucose")
 
 #' @rdname is.physiol
 #' @keywords internal
