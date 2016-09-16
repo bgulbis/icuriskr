@@ -9,9 +9,8 @@
 #'
 #' Takes an R object and sets class to an aps type.
 #'
-#' @param x object to set class \code{riskr}
+#' @param x object to set class
 #'
-#' @name aps2
 #' @keywords internal
 aps2 <- function(x) {
     cl <- class(x)
@@ -34,9 +33,8 @@ as.aps2 <- function(x) {
 #'
 #' Takes an R object and sets class to an aps type.
 #'
-#' @param x object to set class \code{riskr}
+#' @param x object to set class
 #'
-#' @name aps3
 #' @keywords internal
 aps3 <- function(x) {
     cl <- class(x)
@@ -59,7 +57,7 @@ as.aps3 <- function(x) {
 #'
 #' Takes an R object and sets class to a saps type.
 #'
-#' @param x object to set class \code{riskr}
+#' @param x object to set class
 #'
 #' @name saps
 #' @keywords internal
@@ -81,13 +79,12 @@ as.saps <- function(x) {
 }
 
 
-#' Construct data types for use in risk scores
+#' Construct generic data types for use in risk scores
 #'
-#' Takes an R object and sets class to a physiology score data type.
+#' Takes an R object and sets class to a specific physiologic type.
 #'
-#' @param x object to set class \code{riskr}
+#' @param x object to set class
 #'
-#' @name physiol
 #' @keywords internal
 physiol <- function(x) {
     cl <- class(x)
@@ -96,7 +93,17 @@ physiol <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
+#' @keywords internal
+as.physiol <- function(x) {
+    if (missing(x)) x <- character()
+    if (is.physiol(x)) return(x)
+    after <- match("physiol", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "physiol", after = after)
+    x
+}
+
+#' @rdname physiol
 #' @keywords internal
 as.temp <- function(x) {
     if (missing(x)) x <- numeric()
@@ -106,7 +113,7 @@ as.temp <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.sbp <- function(x) {
     if (missing(x)) x <- numeric()
@@ -116,7 +123,7 @@ as.sbp <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.map <- function(x) {
     if (missing(x)) x <- numeric()
@@ -126,7 +133,7 @@ as.map <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.hr <- function(x) {
     if (missing(x)) x <- numeric()
@@ -136,7 +143,7 @@ as.hr <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.rr <- function(x) {
     if (missing(x)) x <- numeric()
@@ -146,7 +153,7 @@ as.rr <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.ph <- function(x) {
     if (missing(x)) x <- numeric()
@@ -156,8 +163,8 @@ as.ph <- function(x) {
     x
 }
 
-#' @rdname phyisol
-#' @export
+#' @rdname physiol
+#' @keywords internal
 as.sodium <- function(x) {
     if (missing(x)) x <- numeric()
     if (is.sodium(x)) return(x)
@@ -166,7 +173,7 @@ as.sodium <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.potassium <- function(x) {
     if (missing(x)) x <- numeric()
@@ -176,7 +183,7 @@ as.potassium <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.scr <- function(x) {
     if (missing(x)) x <- numeric()
@@ -186,7 +193,7 @@ as.scr <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.bun <- function(x) {
     if (missing(x)) x <- numeric()
@@ -196,7 +203,7 @@ as.bun <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.hct <- function(x) {
     if (missing(x)) x <- numeric()
@@ -206,7 +213,7 @@ as.hct <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.wbc <- function(x) {
     if (missing(x)) x <- numeric()
@@ -216,7 +223,7 @@ as.wbc <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.gcs <- function(x) {
     if (missing(x)) x <- numeric()
@@ -226,7 +233,7 @@ as.gcs <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.hco3 <- function(x) {
     if (missing(x)) x <- numeric()
@@ -236,7 +243,7 @@ as.hco3 <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.pao2 <- function(x) {
     if (missing(x)) x <- numeric()
@@ -246,7 +253,7 @@ as.pao2 <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.aa_grad <- function(x) {
     if (missing(x)) x <- numeric()
@@ -256,7 +263,7 @@ as.aa_grad <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.bili <- function(x) {
     if (missing(x)) x <- numeric()
@@ -266,7 +273,7 @@ as.bili <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.albumin <- function(x) {
     if (missing(x)) x <- numeric()
@@ -276,7 +283,7 @@ as.albumin <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.glucose <- function(x) {
     if (missing(x)) x <- numeric()
@@ -286,7 +293,7 @@ as.glucose <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.uop <- function(x) {
     if (missing(x)) x <- numeric()
@@ -296,7 +303,7 @@ as.uop <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.age <- function(x) {
     if (missing(x)) x <- numeric()
@@ -306,10 +313,10 @@ as.age <- function(x) {
     x
 }
 
-#' @rdname phyisol
+#' @rdname physiol
 #' @keywords internal
 as.admit <- function(x) {
-    if (missing(x)) x <- numeric()
+    if (missing(x)) x <- character()
     if (is.admit(x)) return(x)
     after <- match("admit", class(x), nomatch = 0L)
     class(x) <- append(class(x), "admit", after = after)

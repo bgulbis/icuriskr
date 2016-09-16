@@ -4,7 +4,10 @@
 \alias{apache2}
 \title{Calculate APACHE II score}
 \usage{
-apache2()
+apache2(df)
+}
+\arguments{
+\item{df}{A data frame}
 }
 \value{
 A data frame

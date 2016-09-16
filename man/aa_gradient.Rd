@@ -4,22 +4,22 @@
 \alias{aa_gradient}
 \title{Calculate A-a O2 Gradient}
 \usage{
-aa_gradient(pco2, pao2, fio2 = 0.21, temp = 37, elev = 0)
+aa_gradient(pco2, pao2, fio2 = 21, temp = 37, elev = 0)
 }
 \arguments{
-\item{pco2}{A numeric, the partial pressure of carbon dioxide (CO2) in
-arterial blood}
+\item{pco2}{A numeric, the partial pressure of carbon dioxide in arterial
+blood}
 
-\item{pao2}{A numeric, the partial pressure of oxygen (O2) in arterial blood}
+\item{pao2}{A numeric, the partial pressure of oxygen in arterial blood}
 
-\item{fio2}{A numeric, the Fraction of Inspired Oxygen; defaults to room air
-(0.21)}
+\item{fio2}{A numeric, the Fraction of Inspired Oxygen; defaults to room air,
+21 percent}
 
 \item{temp}{A numeric, the patient temperature in degrees Celsius; defaults
-to normal temperature (37 degrees Celsius)}
+to normal temperature, 37 degrees}
 
-\item{elev}{A numeric, the elevation above sea level in feet; defaults to sea
-level (47)}
+\item{elev}{A numeric, the elevation above sea level in meters; defaults to
+sea level, 0 meters}
 }
 \value{
 A numeric
@@ -28,12 +28,11 @@ A numeric
 This function calculates the Alveolar-arterial (A-a) gradient.
 }
 \references{
-\enumerate{
-  \item Kanber GJ, King FW, Eshchar YR, et. al. The alveolar-arterial oxygen
-  gradient in young and elderly men during air and oxygen breathing. Am Rev
-  Respir Dis. 1968 Mar;97(3):376-81.
-  \item Mellemgaard K. The alveolar-arterial oxygen difference: its size and
+1. Kanber GJ, King FW, Eshchar YR, et. al. The alveolar-arterial
+  oxygen gradient in young and elderly men during air and oxygen breathing.
+  Am Rev Respir Dis. 1968 Mar;97(3):376-81.
+
+  2. Mellemgaard K. The alveolar-arterial oxygen difference: its size and
   components in normal man. Acta Physiol Scand. 1966 May;67(1):10-20.
-}
 }
 
