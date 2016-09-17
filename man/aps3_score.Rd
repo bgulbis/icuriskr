@@ -8,7 +8,6 @@
 \alias{aps3_score.bili}
 \alias{aps3_score.bun}
 \alias{aps3_score.default}
-\alias{aps3_score.gcs}
 \alias{aps3_score.glucose}
 \alias{aps3_score.hct}
 \alias{aps3_score.hr}
@@ -54,8 +53,6 @@ aps3_score(x, ...)
 \method{aps3_score}{albumin}(x, ...)
 
 \method{aps3_score}{glucose}(x, ...)
-
-\method{aps3_score}{gcs}(x, ...)
 
 \method{aps3_score}{pao2}(x, ...)
 
