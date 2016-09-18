@@ -41,6 +41,7 @@ apache3 <- function(df) {
         purrr::dmap_if(is.aps3, apache3_score) %>%
         purrr::dmap_at("scr", ~ apache3_score(as.scr(.x), arf = df$arf)) %>%
         purrr::dmap_at("ph", ~ apache3_score(as.ph(.x), pco2 = df$pco2)) %>%
+        purrr::dmap_at("surgical_status", ~ apache3_score(as.admit(.x), comorbidity = df$comorbidity)) %>%
         dplyr::mutate_(.dots = purrr::set_names(
             x = list(~dplyr::if_else(fio2 >= 0.5 & vent == TRUE, aa_grad, pao2, pao2)),
             nm = list("pulm")
@@ -371,6 +372,29 @@ apache3_score.age <- function(x, ...) {
 
     purrr::map_int(x, score)
 }
+
+#' @export
+#' @rdname apache3_score
+apache3_score.admit <- function(x, ..., comorbidity) {
+    score <- function(y, z) {
+        if (is.na(y) | y == "elective" | is.na(z)) {
+            0L
+        } else {
+            dplyr::case_when(
+                z == "aids" ~ 23L,
+                z == "hepatic_failure" ~ 16L,
+                z == "lymphoma" ~ 13L,
+                z == "cancer_mets" ~ 11L,
+                z == "leukemia" | z == "mult_myeloma" | z == "immunosuppress" ~ 10L,
+                z == "cirrhosis" ~ 4L,
+                is.character(z) ~ 0L
+            )
+        }
+    }
+
+    purrr::map2_int(x, comorbidity, score)
+}
+
 
 #' Calculate neurologic abnormality score for APACHE III
 #'

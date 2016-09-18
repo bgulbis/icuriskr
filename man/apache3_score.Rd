@@ -3,6 +3,7 @@
 \name{apache3_score}
 \alias{apache3_score}
 \alias{apache3_score.aa_grad}
+\alias{apache3_score.admit}
 \alias{apache3_score.age}
 \alias{apache3_score.albumin}
 \alias{apache3_score.bili}
@@ -59,6 +60,8 @@ apache3_score(x, ...)
 \method{apache3_score}{aa_grad}(x, ...)
 
 \method{apache3_score}{age}(x, ...)
+
+\method{apache3_score}{admit}(x, ..., comorbidity)
 }
 \arguments{
 \item{x}{A numeric vector with an icuriskr class type}
