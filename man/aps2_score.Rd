@@ -68,8 +68,5 @@ This is an S3 generic function for calculating the Acute Physicologic Score
 invokes the appropriate method based on the type of data (i.e., temperature,
 mean arterial pressure, etc.).
 }
-\examples{
-
-}
 \keyword{internal}
 

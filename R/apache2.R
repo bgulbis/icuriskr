@@ -7,41 +7,27 @@
 #' @return A data frame
 #' @export
 apache2 <- function(df) {
-    score <- dplyr::mutate_(df, .dots = purrr::set_names(
-        x = list(~as.temp(F_to_C(temp)),
-                 ~as.map(map),
-                 ~as.hr(hr),
-                 ~as.rr(rr),
-                 ~as.aa_grad(aa_gradient(pco2, pao2, fio2, F_to_C(temp), 13.106)),
-                 ~as.pao2(pao2),
-                 ~as.ph(ph),
-                 ~as.hco3(hco3),
-                 ~as.sodium(sodium),
-                 ~as.potassium(potassium),
-                 ~as.scr(scr),
-                 ~as.hct(hct),
-                 ~as.wbc(wbc),
-                 ~as.gcs(gcs)
-        ),
-        nm = list("temp",
-                  "map",
-                  "hr",
-                  "rr",
-                  "aa_grad",
-                  "pao2",
-                  "ph",
-                  "hco3",
-                  "sodium",
-                  "potassium",
-                  "scr",
-                  "hct",
-                  "wbc",
-                  "gcs"
-        )
-    )) %>%
-        dplyr::ungroup() %>%
-        purrr::dmap_if(is.aps, aps2_score) %>%
-        purrr::dmap_at("age", age_score) %>%
+    params <- c("hr", "map", "temp", "rr", "pao2", "aa_grad", "hct", "wbc",
+                "scr", "hco3", "sodium", "potassium", "gcs", "ph", "age")
+
+    purrr::unslice(df) %>%
+        purrr::dmap_at(params, as.aps2) %>%
+        purrr::dmap_at("hr", as.hr) %>%
+        purrr::dmap_at("map", as.map) %>%
+        purrr::dmap_at("temp", ~as.temp(F_to_C(.x))) %>%
+        purrr::dmap_at("rr", as.rr) %>%
+        purrr::dmap_at("pao2", as.pao2) %>%
+        purrr::dmap_at("aa_grad", as.aa_grad) %>%
+        purrr::dmap_at("ph", as.ph) %>%
+        purrr::dmap_at("hco3", as.hco3) %>%
+        purrr::dmap_at("hct", as.hct) %>%
+        purrr::dmap_at("wbc", as.wbc) %>%
+        purrr::dmap_at("scr", as.scr) %>%
+        purrr::dmap_at("sodium", as.sodium) %>%
+        purrr::dmap_at("potassium", as.potassium) %>%
+        purrr::dmap_at("gcs", as.gcs) %>%
+        purrr::dmap_at("age", as.age) %>%
+        purrr::dmap_if(is.aps2, aps2_score) %>%
         # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
         # use HCO3 points if missing ABG
         # double SCr points if ARF
@@ -62,8 +48,6 @@ apache2 <- function(df) {
         purrr::by_row(function(x) sum(x[, -1], na.rm = TRUE),
                       .collate = "rows",
                       .to = "apache2")
-
-    score
 }
 
 #' Calculate APACHE II Acute Physiologic Score
@@ -78,9 +62,7 @@ apache2 <- function(df) {
 #' @param x A numeric vector with an icuriskr class type
 #' @param ... additional arguments passed on to individual methods
 #'
-#' @examples
-#'
-#' @keywords internal
+#' @export
 aps2_score <- function(x, ...) {
     UseMethod("aps2_score")
 }
