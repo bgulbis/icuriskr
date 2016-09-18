@@ -6,6 +6,7 @@
 \alias{saps2_score.age}
 \alias{saps2_score.bili}
 \alias{saps2_score.bun}
+\alias{saps2_score.comorbidity}
 \alias{saps2_score.default}
 \alias{saps2_score.gcs}
 \alias{saps2_score.hco3}
@@ -50,6 +51,8 @@ saps2_score(x, ...)
 \method{saps2_score}{age}(x)
 
 \method{saps2_score}{admit}(x)
+
+\method{saps2_score}{comorbidity}(x)
 }
 \arguments{
 \item{x}{A numeric vector with an icuriskr class type}

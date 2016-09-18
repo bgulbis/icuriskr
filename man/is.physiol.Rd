@@ -7,6 +7,7 @@
 \alias{is.albumin}
 \alias{is.bili}
 \alias{is.bun}
+\alias{is.comorbidity}
 \alias{is.gcs}
 \alias{is.glucose}
 \alias{is.hco3}
@@ -71,6 +72,8 @@ is.uop(x)
 is.age(x)
 
 is.admit(x)
+
+is.comorbidity(x)
 }
 \arguments{
 \item{x}{object which may have a physiology class type}

@@ -8,7 +8,8 @@
 #' @export
 saps2 <- function(df) {
     params <- c("temp", "sbp", "hr", "pao2", "hco3", "sodium", "potassium",
-                "bun", "bili", "wbc", "gcs", "uop", "age", "admit_type")
+                "bun", "bili", "wbc", "gcs", "uop", "age", "admit_type",
+                "comorbidity")
 
     purrr::unslice(df) %>%
         # if ventilated, calculate PaO2/FiO2 ratio
@@ -30,6 +31,7 @@ saps2 <- function(df) {
         purrr::dmap_at("uop", as.uop) %>%
         purrr::dmap_at("age", as.age) %>%
         purrr::dmap_at("admit_type", as.admit) %>%
+        purrr::dmap_at("comorbidity", as.comorbidity) %>%
         purrr::dmap_if(is.saps, saps2_score) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
@@ -268,3 +270,17 @@ saps2_score.admit <- function(x) {
     purrr::map_int(x, score)
 }
 
+#' @export
+#' @rdname saps2_score
+saps2_score.comorbidity <- function(x) {
+    score <- function(y) {
+        dplyr::case_when(
+            y == "aids" ~ 17L,
+            y == "heme" ~ 10L,
+            y == "cancer_mets" ~ 9L,
+            is.character(y) ~ 0L
+        )
+    }
+
+    purrr::map_int(x, score)
+}

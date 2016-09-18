@@ -323,6 +323,16 @@ as.admit <- function(x) {
     x
 }
 
+#' @rdname physiol
+#' @keywords internal
+as.comorbidity <- function(x) {
+    if (missing(x)) x <- character()
+    if (is.comorbidity(x)) return(x)
+    after <- match("comorbidity", class(x), nomatch = 0L)
+    class(x) <- append(class(x), "comorbidity", after = after)
+    x
+}
+
 # class test functions ---------------------------------
 
 #' Test icuriskr-related classes
@@ -445,3 +455,6 @@ is.age <- function(x) inherits(x, "age")
 #' @keywords internal
 is.admit <- function(x) inherits(x, "admit")
 
+#' @rdname is.physiol
+#' @keywords internal
+is.comorbidity <- function(x) inherits(x, "comorbidity")

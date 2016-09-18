@@ -7,6 +7,7 @@
 \alias{as.albumin}
 \alias{as.bili}
 \alias{as.bun}
+\alias{as.comorbidity}
 \alias{as.gcs}
 \alias{as.glucose}
 \alias{as.hco3}
@@ -74,6 +75,8 @@ as.uop(x)
 as.age(x)
 
 as.admit(x)
+
+as.comorbidity(x)
 }
 \arguments{
 \item{x}{object to set class}
