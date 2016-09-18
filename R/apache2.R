@@ -28,7 +28,7 @@ apache2 <- function(df) {
         purrr::dmap_at("gcs", as.gcs) %>%
         purrr::dmap_at("age", as.age) %>%
         purrr::dmap_if(is.aps2, apache2_score) %>%
-        purrr::dmap_at("surgical_status", ~ apache2_score(as.admit(.x), comorbidity = df$comorbidity)) %>%
+        purrr::dmap_at("admit", ~ apache2_score(as.admit(.x), comorbidity = df$comorbidity)) %>%
         # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
         # use HCO3 points if missing ABG
         # double SCr points if ARF
