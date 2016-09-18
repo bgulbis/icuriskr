@@ -30,7 +30,7 @@ saps2 <- function(df) {
         purrr::dmap_at("uop", as.uop) %>%
         purrr::dmap_at("age", as.age) %>%
         purrr::dmap_at("admit_type", as.admit) %>%
-        purrr::dmap_if(is.saps, saps_score) %>%
+        purrr::dmap_if(is.saps, saps2_score) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
         dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
@@ -41,7 +41,7 @@ saps2 <- function(df) {
 
 #' Calculate SAPS II Score
 #'
-#' \code{saps_score} calculates the saps score for an SAPS II variable
+#' \code{saps2_score} calculates the saps score for an SAPS II variable
 #'
 #' This is an S3 generic function for calculating the Acute Physicologic Score
 #' for a variable based on the SAPS II scoring system.The function invokes the
@@ -53,21 +53,21 @@ saps2 <- function(df) {
 #'
 #' @examples
 #'
-#' @keywords internal
-saps_score <- function(x, ...) {
-    UseMethod("saps_score")
+#' @export
+saps2_score <- function(x, ...) {
+    UseMethod("saps2_score")
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.default <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.default <- function(x, ...) {
     warning("No method available for objects of this class")
     x
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.temp <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.temp <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 39 ~ 3L,
@@ -78,9 +78,9 @@ saps_score.temp <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.sbp <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.sbp <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 200 ~ 2L,
@@ -93,9 +93,9 @@ saps_score.sbp <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.hr <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.hr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 160 ~ 7L,
@@ -109,9 +109,9 @@ saps_score.hr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.sodium <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.sodium <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 145 ~ 1L,
@@ -123,9 +123,9 @@ saps_score.sodium <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.potassium <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.potassium <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 5 | y < 3 ~ 3L,
@@ -136,9 +136,9 @@ saps_score.potassium <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.bun <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.bun <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 84 ~ 10L,
@@ -150,9 +150,9 @@ saps_score.bun <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.bili <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.bili <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 6 ~ 9L,
@@ -164,9 +164,9 @@ saps_score.bili <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.wbc <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.wbc <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 20 ~ 3L,
@@ -178,9 +178,9 @@ saps_score.wbc <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.gcs <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.gcs <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y < 6 ~ 26L,
@@ -194,9 +194,9 @@ saps_score.gcs <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.hco3 <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.hco3 <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y < 15 ~ 6L,
@@ -208,9 +208,9 @@ saps_score.hco3 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.pao2 <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.pao2 <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y < 100 ~ 11L,
@@ -223,9 +223,9 @@ saps_score.pao2 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.uop <- function(x, ...) {
+#' @export
+#' @rdname saps2_score
+saps2_score.uop <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y < 0.5 ~ 11L,
@@ -237,9 +237,9 @@ saps_score.uop <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.age <- function(x) {
+#' @export
+#' @rdname saps2_score
+saps2_score.age <- function(x) {
     score <- function(y) {
         dplyr::case_when(
             y >= 80 ~ 18L,
@@ -254,9 +254,9 @@ saps_score.age <- function(x) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname saps_score
-saps_score.admit <- function(x) {
+#' @export
+#' @rdname saps2_score
+saps2_score.admit <- function(x) {
     score <- function(y) {
         dplyr::case_when(
             y == "nonoperative" ~ 6L,

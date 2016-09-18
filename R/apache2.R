@@ -27,7 +27,7 @@ apache2 <- function(df) {
         purrr::dmap_at("potassium", as.potassium) %>%
         purrr::dmap_at("gcs", as.gcs) %>%
         purrr::dmap_at("age", as.age) %>%
-        purrr::dmap_if(is.aps2, aps2_score) %>%
+        purrr::dmap_if(is.aps2, apache2_score) %>%
         # if FiO2 >= 0.5, use A-a gradient; otherwise use PaO2
         # use HCO3 points if missing ABG
         # double SCr points if ARF
@@ -39,9 +39,7 @@ apache2 <- function(df) {
             ),
             nm = list("pulm", "ph", "scr")
         )) %>%
-        dplyr::select_(quote(-hco3),
-                       quote(-aa_grad),
-                       quote(-pao2)) %>%
+        dplyr::select_(quote(-hco3), quote(-aa_grad), quote(-pao2)) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
         dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
@@ -52,7 +50,7 @@ apache2 <- function(df) {
 
 #' Calculate APACHE II Acute Physiologic Score
 #'
-#' \code{aps2_score} calculates the APS score for an APACHE II variable
+#' \code{apache2_score} calculates the APS score for an APACHE II variable
 #'
 #' This is an S3 generic function for calculating the Acute Physicologic Score
 #' (APS) for a variable based on the APACHE II scoring system.The function
@@ -63,20 +61,20 @@ apache2 <- function(df) {
 #' @param ... additional arguments passed on to individual methods
 #'
 #' @export
-aps2_score <- function(x, ...) {
-    UseMethod("aps2_score")
+apache2_score <- function(x, ...) {
+    UseMethod("apache2_score")
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.default <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.default <- function(x, ...) {
     warning("No method available for objects of this class")
     x
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.temp <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.temp <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 41 | y <= 29.9 ~ 4L,
@@ -90,9 +88,9 @@ aps2_score.temp <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.map <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.map <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 160 | y <= 49 ~ 4L,
@@ -105,9 +103,9 @@ aps2_score.map <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.hr <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.hr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 180 | y <= 39 ~ 4L,
@@ -120,9 +118,9 @@ aps2_score.hr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.rr <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.rr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 50 | y <= 5 ~ 4L,
@@ -136,9 +134,9 @@ aps2_score.rr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.ph <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.ph <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 7.7 | y < 7.15 ~ 4L,
@@ -152,9 +150,9 @@ aps2_score.ph <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.sodium <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.sodium <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 180 | y <= 110 ~ 4L,
@@ -168,9 +166,9 @@ aps2_score.sodium <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.potassium <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.potassium <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 7 | y < 2.5 ~ 4L,
@@ -184,9 +182,9 @@ aps2_score.potassium <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.scr <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.scr <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 3.5 ~ 4L,
@@ -199,9 +197,9 @@ aps2_score.scr <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.hct <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.hct <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 60 | y < 20 ~ 4L,
@@ -214,9 +212,9 @@ aps2_score.hct <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.wbc <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.wbc <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 40 | y < 1 ~ 4L,
@@ -229,15 +227,15 @@ aps2_score.wbc <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.gcs <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.gcs <- function(x, ...) {
     purrr::map_int(x, ~ 15L - as.integer(.x))
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.hco3 <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.hco3 <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 52 | y < 15 ~ 4L,
@@ -251,9 +249,9 @@ aps2_score.hco3 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.pao2 <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.pao2 <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y < 55 ~ 4L,
@@ -266,9 +264,9 @@ aps2_score.pao2 <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.aa_grad <- function(x, ...) {
+#' @export
+#' @rdname apache2_score
+apache2_score.aa_grad <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 500 ~ 4L,
@@ -281,9 +279,9 @@ aps2_score.aa_grad <- function(x, ...) {
     purrr::map_int(x, score)
 }
 
-#' @keywords internal
-#' @rdname aps2_score
-aps2_score.age <- function(x) {
+#' @export
+#' @rdname apache2_score
+apache2_score.age <- function(x) {
     score <- function(y) {
         dplyr::case_when(
             y >= 75 ~ 6L,
