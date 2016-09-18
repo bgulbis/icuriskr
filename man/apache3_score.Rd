@@ -58,7 +58,7 @@ apache3_score(x, ...)
 
 \method{apache3_score}{aa_grad}(x, ...)
 
-\method{apache3_score}{age}(x)
+\method{apache3_score}{age}(x, ...)
 }
 \arguments{
 \item{x}{A numeric vector with an icuriskr class type}

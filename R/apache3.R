@@ -356,7 +356,7 @@ apache3_score.aa_grad <- function(x, ...) {
 
 #' @export
 #' @rdname apache3_score
-apache3_score.age <- function(x) {
+apache3_score.age <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 85 ~ 24L,
