@@ -28,4 +28,9 @@ tmp3$lymphoma <- icd9_map_elix$Lymphoma
 
 comorbidity_map_icd9 <- as.icd_comorbidity_map(tmp3)
 
-devtools::use_data(comorbidity_map_icd9, overwrite = TRUE)
+comorbidity_drg <- comorbid_icd9 %>%
+    distinct(comorbidity, drg) %>%
+    filter(!is.na(drg))
+
+devtools::use_data(comorbidity_map_icd9, comorbidity_drg, overwrite = TRUE)
+
