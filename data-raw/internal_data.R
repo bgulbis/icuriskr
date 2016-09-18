@@ -28,4 +28,4 @@ tmp3$lymphoma <- icd9_map_elix$Lymphoma
 
 comorbidity_map_icd9 <- as.icd_comorbidity_map(tmp3)
 
-devtools::use_data(comorbidity_map_icd9)
+devtools::use_data(comorbidity_map_icd9, overwrite = TRUE)
