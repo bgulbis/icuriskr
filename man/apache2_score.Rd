@@ -3,6 +3,7 @@
 \name{apache2_score}
 \alias{apache2_score}
 \alias{apache2_score.aa_grad}
+\alias{apache2_score.admit}
 \alias{apache2_score.age}
 \alias{apache2_score.default}
 \alias{apache2_score.gcs}
@@ -52,7 +53,9 @@ apache2_score(x, ...)
 
 \method{apache2_score}{aa_grad}(x, ...)
 
-\method{apache2_score}{age}(x)
+\method{apache2_score}{age}(x, ...)
+
+\method{apache2_score}{admit}(x, ..., comorbidity)
 }
 \arguments{
 \item{x}{A numeric vector with an icuriskr class type}
