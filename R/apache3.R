@@ -41,7 +41,7 @@ apache3 <- function(df) {
         purrr::dmap_if(is.aps3, apache3_score) %>%
         purrr::dmap_at("scr", ~ apache3_score(as.scr(.x), arf = df$arf)) %>%
         purrr::dmap_at("ph", ~ apache3_score(as.ph(.x), pco2 = df$pco2)) %>%
-        purrr::dmap_at("surgical_status", ~ apache3_score(as.admit(.x), comorbidity = df$comorbidity)) %>%
+        purrr::dmap_at("admit", ~ apache3_score(as.admit(.x), comorbidity = df$comorbidity)) %>%
         dplyr::mutate_(.dots = purrr::set_names(
             x = list(~dplyr::if_else(fio2 >= 0.5 & vent == TRUE, aa_grad, pao2, pao2)),
             nm = list("pulm")
