@@ -8,8 +8,7 @@
 #' @export
 apache3 <- function(df) {
     params <- c("hr", "map", "temp", "rr", "pao2", "aa_grad", "hct", "wbc",
-                "scr", "uop", "bun", "sodium", "albumin", "bili", "glucose",
-                "age")
+                "uop", "bun", "sodium", "albumin", "bili", "glucose", "age")
 
     # ARF: SCr >= 1.5 + UOP < 410 and no chronic HD
     # If on vent, no RR points for 6-12
@@ -42,17 +41,11 @@ apache3 <- function(df) {
         purrr::dmap_if(is.aps3, apache3_score) %>%
         purrr::dmap_at("scr", ~ apache3_score(as.scr(.x), arf = df$arf)) %>%
         purrr::dmap_at("ph", ~ apache3_score(as.ph(.x), pco2 = df$pco2)) %>%
-        # dplyr::mutate_(.dots = purrr::set_names(
-        #     x = list(~apache3_score(as.scr(scr), arf = arf),
-        #              ~apache3_score(as.ph(ph), pco2 = pco2)),
-        #     nm = list("scr", "ph")
-        # )) %>%
         dplyr::mutate_(.dots = purrr::set_names(
             x = list(~dplyr::if_else(fio2 >= 0.5 & vent == TRUE, aa_grad, pao2, pao2)),
             nm = list("pulm")
         )) %>%
-        dplyr::select_(quote(-aa_grad),
-                       quote(-pao2)) %>%
+        dplyr::select_(quote(-aa_grad), quote(-pao2)) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
         dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
