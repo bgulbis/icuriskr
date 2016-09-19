@@ -43,7 +43,9 @@ apache2 <- function(df) {
         dplyr::select_(quote(-hco3), quote(-aa_grad), quote(-pao2)) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
-        dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
+        dplyr::summarize_if(is.numeric, dplyr::funs_(
+            dots = "max",
+            args = list(na.rm = TRUE))) %>%
         purrr::by_row(function(x) sum(x[, -1], na.rm = TRUE),
                       .collate = "rows",
                       .to = "apache2")
@@ -60,6 +62,8 @@ apache2 <- function(df) {
 #'
 #' @param x A numeric vector with an icuriskr class type
 #' @param ... additional arguments passed on to individual methods
+#' @param comorbidity a character vector, indicates the patient's primary
+#'   comorbidity
 #'
 #' @export
 apache2_score <- function(x, ...) {

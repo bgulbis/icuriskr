@@ -61,6 +61,9 @@ apache2_score(x, ...)
 \item{x}{A numeric vector with an icuriskr class type}
 
 \item{...}{additional arguments passed on to individual methods}
+
+\item{comorbidity}{a character vector, indicates the patient's primary
+comorbidity}
 }
 \description{
 \code{apache2_score} calculates the APS score for an APACHE II variable

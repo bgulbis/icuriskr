@@ -49,7 +49,9 @@ apache3 <- function(df) {
         dplyr::select_(quote(-aa_grad), quote(-pao2)) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
-        dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
+        dplyr::summarize_if(is.numeric, dplyr::funs_(
+            dots = "max",
+            args = list(na.rm = TRUE))) %>%
         purrr::by_row(function(x) sum(x[, -1], na.rm = TRUE),
                       .collate = "rows",
                       .to = "apache3")
@@ -66,8 +68,11 @@ apache3 <- function(df) {
 #'
 #' @param x A numeric vector with an icuriskr class type
 #' @param ... additional arguments passed on to individual methods
-#'
-#' @examples
+#' @param pco2 a numeric vector, the PCO2 value
+#' @param arf a logical vector, indicates whether the patient as acute renal
+#'   failure
+#' @param comorbidity a character vector, indicates the patient's primary
+#'   comorbidity
 #'
 #' @export
 apache3_score <- function(x, ...) {

@@ -67,6 +67,14 @@ apache3_score(x, ...)
 \item{x}{A numeric vector with an icuriskr class type}
 
 \item{...}{additional arguments passed on to individual methods}
+
+\item{pco2}{a numeric vector, the PCO2 value}
+
+\item{arf}{a logical vector, indicates whether the patient as acute renal
+failure}
+
+\item{comorbidity}{a character vector, indicates the patient's primary
+comorbidity}
 }
 \description{
 \code{apache3_score} calculates the APS score for an APACHE III variable
@@ -76,8 +84,5 @@ This is an S3 generic function for calculating the Acute Physicologic Score
 (APS) for a variable based on the APACHE III scoring system.The function
 invokes the appropriate method based on the type of data (i.e., temperature,
 mean arterial pressure, etc.).
-}
-\examples{
-
 }
 

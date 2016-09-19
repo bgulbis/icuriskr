@@ -13,9 +13,10 @@ saps2 <- function(df) {
 
     purrr::unslice(df) %>%
         # if ventilated, calculate PaO2/FiO2 ratio
-        dplyr::mutate_at("pao2", dplyr::funs(
-            pao2 = dplyr::if_else(vent == TRUE, pao2 / (fio2 / 100),
-                                  NA_real_, NA_real_))) %>%
+        dplyr::mutate_(.dots = purrr::set_names(
+            x = list(~dplyr::if_else(vent == TRUE, pao2 / (fio2 / 100), NA_real_, NA_real_)),
+            nm = list("pao2")
+        )) %>%
         purrr::dmap_at(params, as.saps) %>%
         purrr::dmap_at("temp", ~as.temp(F_to_C(.x))) %>%
         purrr::dmap_at("sbp", as.sbp) %>%
@@ -35,7 +36,9 @@ saps2 <- function(df) {
         purrr::dmap_if(is.saps, saps2_score) %>%
         dplyr::select_if(function(x) is.integer(x) | is.character(x)) %>%
         dplyr::group_by_(.dots = list("pie.id")) %>%
-        dplyr::summarize_if(is.numeric, dplyr::funs(max(., na.rm = TRUE))) %>%
+        dplyr::summarize_if(is.numeric, dplyr::funs_(
+            dots = "max",
+            args = list(na.rm = TRUE))) %>%
         purrr::by_row(function(x) sum(x[, -1], na.rm = TRUE),
                       .collate = "rows",
                       .to = "saps2")
@@ -52,8 +55,6 @@ saps2 <- function(df) {
 #'
 #' @param x A numeric vector with an icuriskr class type
 #' @param ... additional arguments passed on to individual methods
-#'
-#' @examples
 #'
 #' @export
 saps2_score <- function(x, ...) {
@@ -241,7 +242,7 @@ saps2_score.uop <- function(x, ...) {
 
 #' @export
 #' @rdname saps2_score
-saps2_score.age <- function(x) {
+saps2_score.age <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y >= 80 ~ 18L,
@@ -258,7 +259,7 @@ saps2_score.age <- function(x) {
 
 #' @export
 #' @rdname saps2_score
-saps2_score.admit <- function(x) {
+saps2_score.admit <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y == "nonoperative" ~ 6L,
@@ -272,7 +273,7 @@ saps2_score.admit <- function(x) {
 
 #' @export
 #' @rdname saps2_score
-saps2_score.comorbidity <- function(x) {
+saps2_score.comorbidity <- function(x, ...) {
     score <- function(y) {
         dplyr::case_when(
             y == "aids" ~ 17L,

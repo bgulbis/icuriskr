@@ -48,11 +48,11 @@ saps2_score(x, ...)
 
 \method{saps2_score}{uop}(x, ...)
 
-\method{saps2_score}{age}(x)
+\method{saps2_score}{age}(x, ...)
 
-\method{saps2_score}{admit}(x)
+\method{saps2_score}{admit}(x, ...)
 
-\method{saps2_score}{comorbidity}(x)
+\method{saps2_score}{comorbidity}(x, ...)
 }
 \arguments{
 \item{x}{A numeric vector with an icuriskr class type}
@@ -67,8 +67,5 @@ This is an S3 generic function for calculating the Acute Physicologic Score
 for a variable based on the SAPS II scoring system.The function invokes the
 appropriate method based on the type of data (i.e., temperature, systolic
 arterial pressure, etc.).
-}
-\examples{
-
 }
 
